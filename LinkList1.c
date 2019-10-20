@@ -1,15 +1,14 @@
-#include"stdio.h"
 #include"stdlib.h"
+#include"stdio.h"
 
 typedef char ElemType;
-typedef struct Node{
+typedef struct  Node{
   ElemType data;
-  struct Nade *next;
+  struct Node* next;
 }*LinkList;
 
 //函数的定义
 LinkList Init();//单链表的初始化
-void Create_Head(LinkList L);//尾插法建表
 void Create_Tail(LinkList L);//头插法建表
 void nizhi(LinkList L);//单链表的逆置
 void get_hao(LinkList L,int i);//按号查找
@@ -19,27 +18,11 @@ void InsList(LinkList L,int i,ElemType e);//单链表的插入
 void DelList(LinkList L,int i,ElemType *e);//单链表的删除
 void output(LinkList L);
 
-//函数原型
 LinkList Init(){
   LinkList L;
   L=(LinkList)malloc(sizeof(LinkList));
   L->next=NULL;
   return L;
-}
-
-void Create_Head(LinkList L){
-  LinkList s;
-  ElemType c;
-  while(1){
-    c=getchar();
-    if(c!='*'){
-      s=(LinkList)malloc(sizeof(LinkList));
-      s->data=c;
-      s->next=L->next;
-      L->next=s;
-    }
-    else break;
-  }
 }
 
 void Create_Tail(LinkList L){
@@ -58,6 +41,7 @@ void Create_Tail(LinkList L){
       break;
     }
   }
+  printf("建表成功!\n");
 }
 
 void nizhi(LinkList L){
@@ -71,6 +55,8 @@ void nizhi(LinkList L){
     p=f;
   }
   L->next=b;
+  printf("逆置成功!逆置后为:");
+  output(L);
 }
 
 void get_hao(LinkList L,int i){
@@ -95,19 +81,18 @@ void get_zhi(LinkList L,ElemType i){
       p=p->next;
     }
     else{
-      printf("查找成功\n");
-      break;
+      printf("查找成功!\n");
+      return;;
     }
   }
+  printf("查找失败!\n");
 }
 
 int ListLength(LinkList L){
-  LinkList p;
   int j=0;
-  p=L->next;
-  while(p!=NULL){
-    p=p->next;
+  while(L->next!=NULL){
     j++;
+    L=L->next;
   }
   return j;
 }
@@ -117,7 +102,7 @@ void InsList(LinkList L,int i,ElemType e){
   int k=0;
   if(i<=0)printf("NULL\n");
   p=L;
-  while(p!=NULL && k<i){
+  while(p!=NULL && k<i-1){
     p=p->next;
     k=k+1;
   }
@@ -126,6 +111,7 @@ void InsList(LinkList L,int i,ElemType e){
   s->data=e;
   s->next=p->next;
   p->next=s;
+  printf("插入成功\n");
 }
 
 void DelList(LinkList L,int i,ElemType *e){
@@ -144,71 +130,115 @@ void DelList(LinkList L,int i,ElemType *e){
 }
 
 void output(LinkList L){
-  while(L){
-    printf("%c ",L->data);
+  while(L->next!=NULL){
     L=L->next;
+    printf("%c ",L->data);
   }
    printf("\n");
 }
 
 int main(){
+
   int create,c;
   LinkList L=Init();
   ElemType a;
+
+//先建表,避免出现求长度函数的错误
+  printf("尾插法建表.\n");
+  printf("请输入单链表的元素,*结束.\n");
+  Create_Tail(L);
+
   while (1) {
-    printf("********************************\n");
-    printf("*1-尾插法建表     2-头插法建表   *\n");
-    printf("*3-表的逆置       4-按号查找     *\n");
-    printf("*5-按值查找       6-表的长度     *\n");
-    printf("*7-表的插入       8-表的删除     *\n");
-    printf("*9-表的输出       0-退出         *\n");
-    printf("********************************\n");
-    printf("请在0~9中输入选项\n");
+    printf("*********************************\n");
+    printf("*        单链表功能              *\n");
+    printf("*1-表的逆置       2-按号查找     *\n");
+    printf("*3-按值查找       4-表的长度     *\n");
+    printf("*5-表的插入       6-表的删除     *\n");
+    printf("*7-表的输出       0-退出         *\n");
+    printf("*********************************\n");
+    printf("请在0~7中输入选项\n");
     scanf("%d",&create);
     switch (create) {
       case 1:
-        printf("请输入单链表的元素,*结束.\n");
-        Create_Tail(L);
-        break;
-      case 2:
-        printf("请输入单链表的元素,*结束.\n");
-        Create_Head(L);
-        break;
-      case 3:
         nizhi(L);
         break;
-      case 4:
+      case 2:
         printf("请输入你要查找的号码: ");
-        scanf("%d",&c);
+        scanf("\n%d",&c);
         get_hao(L,c);
         break;
-      case 5:
+      case 3:
         printf("请输入你要查找的值: ");
-        scanf("%c",&a);
+        scanf("\n%c",&a);
         get_zhi(L,a);
         break;
-      case 6:
+      case 4:
         printf("单链表的长度=%d\n",ListLength(L));
         break;
-      case 7:
+      case 5:
         printf("请分别输入你要插入在那个号码位置和元素: ");
-        scanf("%d\n%c",&c,&a);
+        scanf("\n%d %c",&c,&a);
         InsList(L,c,a);
         break;
-      case 8:
+      case 6:
         printf("请输入你要删除的那个号码位置: ");
-        scanf("%d",&c);
+        scanf("\n%d",&c);
         DelList(L,c,&a);
         printf("删除元素为%c\n",a);
         break;
-      case 9:
+      case 7:
         output(L);
         break;
       case 0:
         exit(0);
       default:
-        printf("请在0~9选择.\n");
+        printf("请在0~7选择.\n");
     }
   }
   return 0;
 }
+
+// case 1:
+//   printf("请输入单链表的元素,*结束.\n");
+//   Create_Tail(L);
+//   break;
+// case 2:
+//   printf("请输入单链表的元素,*结束.\n");
+//   Create_Head(L);
+//   break;
+
+// while (1) {
+//   printf("*********************************\n");
+//   printf("*1-头插法建表     2-尾插法建表   *\n");
+//   printf("*提示:输入单链表的元素时,*为结束 *\n");
+//   printf("*********************************\n");
+//   printf("请1 2中选择你建表的方法: ");
+//   scanf("%d",&create);
+//   if(create==1){
+//     Create_Head(L);
+//     break;
+//   }
+//   if(create==2){
+//     Create_Tail(L);
+//     break;
+//   }
+//   else printf("输入非法!请重新输入!\n");
+// }
+
+// void Create_Head(LinkList L);//尾插法建表
+// void Create_Head(LinkList L){
+//   LinkList s;
+//   ElemType c;
+//   while(1){
+//     c=getchar();
+//     if(c!='*'){
+//       s=(LinkList)malloc(sizeof(LinkList));
+//       s->data=c;
+//       s->next=L->next;
+//       L->next=s;
+//     }
+//     else
+//     	break;
+//   }
+//   printf("建表成功!\n");
+// }
